@@ -4,41 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DASH Player</title>
+
+    <!-- Dash.js Library -->
     <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        video { width: 100%; max-width: 800px; }
+        body {
+            margin: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        video {
+            width: 80%;
+            max-width: 900px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
-    <video id="videoPlayer" controls autoplay></video>
+
+    <!-- DASH Video Player -->
+    <video id="dash-player" controls autoplay></video>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var video = document.getElementById("videoPlayer");
-            var player = dashjs.MediaPlayer().create();
+            var video = document.getElementById("dash-player");
+            var url = "https://sg-cors.onrender.com/https://linearjitp-playback.astro.com.my/dash-wv/linear/2504/default_primary.mpd";
 
-            // Use a CORS proxy
-            var dashUrl = "https://corsproxy.io/?https://linearjitp-playback.astro.com.my/dash-wv/linear/2504/default_primary.mpd";
-            
-            // DRM Key (ClearKey)
-            var drmConfig = {
-                "org.w3.clearkey": {
-                    "clearkeys": {
-                        "03c2e0af2f8159f9f0ce9b5dbc865f10": "cd84ed136b0cc71f8ab8cd4d4f6a2e4c"
-                    }
-                }
-            };
+            if (dashjs.MediaPlayer.isSupported()) {
+                var player = dashjs.MediaPlayer().create();
+                player.initialize(video, url, true);
 
-            player.initialize(video, dashUrl, true);
-            player.setProtectionData(drmConfig);
+                // Error Handling
+                player.on(dashjs.MediaPlayer.events.ERROR, function (e) {
+                    console.error("DASH Player Error:", e);
+                });
 
-            player.on(dashjs.MediaPlayer.events.ERROR, function (e) {
-                console.error("DASH Player Error:", e);
-            });
+            } else {
+                alert("DASH streaming is not supported on your browser.");
+            }
         });
     </script>
+
 </body>
 </html>
+
 
 
