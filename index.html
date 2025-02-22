@@ -22,12 +22,18 @@
             var drmKey = "cd84ed136b0cc71f8ab8cd4d4f6a2e4c";
 
             player.initialize(video, dashUrl, true);
+
             player.setProtectionData({
                 "org.w3.clearkey": {
                     "clearkeys": { [drmKeyId]: drmKey }
                 }
             });
+
+            player.on(dashjs.MediaPlayer.events.ERROR, function (e) {
+                console.error("DASH Player Error:", e);
+            });
         });
     </script>
 </body>
 </html>
+
